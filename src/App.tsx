@@ -7,6 +7,7 @@ function App() {
   return (
     <div className="App">
       <Table />
+      <h1>sad</h1>
     </div>
   );
 }
