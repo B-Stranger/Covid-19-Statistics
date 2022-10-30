@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{html,tsx}",
-    require.resolve("react-widgets/styles.css"),
-  ],
+  content: ["./src/**/*.{html,tsx}"],
   theme: {
     extend: {
       screens: {
@@ -11,5 +8,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("react-widgets-tailwind")],
+  plugins: [require("@tailwindcss/forms")],
 };

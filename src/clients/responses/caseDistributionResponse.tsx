@@ -3,7 +3,7 @@ export interface CaseDistributionResponse {
 }
 
 export interface CovidStats {
-  dateRep: Date;
+  dateRep: string;
   day: string;
   year: string;
   month: string;

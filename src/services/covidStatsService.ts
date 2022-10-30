@@ -1,11 +1,37 @@
 import { CovidStats } from "../clients";
 import { AggregatedCovidStat, DateRangeStat } from "./models";
 
+const getMinDate = (stats: CovidStats[]): Date => {
+  const dates = stats.map((s) =>
+    Number(new Date(Number(s.year), Number(s.month) - 1, Number(s.day)))
+  );
+  const minDate: number = Math.min(...dates);
+  return new Date(minDate);
+};
+const getMaxDate = (stats: CovidStats[]): Date => {
+  const dates = stats.map((s) =>
+    Number(new Date(Number(s.year), Number(s.month) - 1, Number(s.day)))
+  );
+  const maxDate: number = Math.max(...dates);
+  return new Date(maxDate);
+};
+
+export const getMinMaxDate = (stats: CovidStats[]): DateRangeStat => {
+  const dates: DateRangeStat = {
+    minDate: getMinDate(stats),
+    maxDate: getMaxDate(stats),
+  };
+  return dates;
+};
+export const getAllCountries = (stats: CovidStats[]): string[] => {
+  return Array.from(new Set(stats.map((stat) => stat.countriesAndTerritories)));
+};
+
 export const getAggregatedStats = (
   stats: CovidStats[],
-  country?: string,
   dateFrom?: Date,
-  dateTo?: Date
+  dateTo?: Date,
+  country?: string
 ): AggregatedCovidStat[] => {
   let countries: {
     [country: string]: AggregatedCovidStat;
@@ -32,7 +58,7 @@ export const getAggregatedStats = (
       };
     }
     // for getting only one data from the specif date(if needed)
-    const statDate = new Date(Number(year), Number(month), Number(day));
+    const statDate = new Date(Number(year), Number(month) - 1, Number(day));
     if (dateFrom && dateTo) {
       if (statDate >= dateFrom && statDate <= dateTo) {
         countries[countriesAndTerritories].cases += cases;
