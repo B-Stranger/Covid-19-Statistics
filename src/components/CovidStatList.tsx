@@ -41,7 +41,13 @@ const CovidStatList: React.FC<CovidStatsProps> = ({ data }) => {
               {data.map((stat, index) => (
                 <tr key={index} className=" m-2">
                   <td className="pl-4 pr-3 font-medium text-gray-900 sm:pl-6">
-                    {stat.country}
+                    <>{stat.country}</>
+                  </td>
+                  <td className="hidden text-gray-500 sm:table-cell">
+                    <>{stat.cases}</>
+                  </td>
+                  <td className="hidden text-gray-500 sm:table-cell">
+                    <>{stat.deaths}</>
                   </td>
                   <td className="hidden text-gray-500 sm:table-cell">
                     <>{stat.totalCases}</>
@@ -50,16 +56,10 @@ const CovidStatList: React.FC<CovidStatsProps> = ({ data }) => {
                     <>{stat.totalDeaths}</>
                   </td>
                   <td className="hidden text-gray-500 sm:table-cell">
-                    <>{stat.totalDeaths}</>
+                    <>Temp</>
                   </td>
                   <td className="hidden text-gray-500 sm:table-cell">
-                    <>{stat.totalDeaths}</>
-                  </td>
-                  <td className="hidden text-gray-500 sm:table-cell">
-                    <>{stat.totalDeaths}</>
-                  </td>
-                  <td className="hidden text-gray-500 sm:table-cell">
-                    <>{stat.totalDeaths}</>
+                    <>Temp</>
                   </td>
                 </tr>
               ))}

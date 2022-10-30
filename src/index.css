@@ -6,12 +6,15 @@
   h1 {
     @apply text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl;
   }
+  h2 {
+    @apply text-lg font-bold tracking-tight sm:text-xl lg:text-2xl;
+  }
 }
 @layer components {
-  button {
+  .btn-primary {
     @apply items-center rounded border border-gray-900  px-5 py-2 mr-2 text-sm font-medium text-black shadow-sm hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2;
   }
-  button.active {
+  .btn-primary.active {
     @apply text-white bg-indigo-600 cursor-default pointer-events-none;
   }
   table {
