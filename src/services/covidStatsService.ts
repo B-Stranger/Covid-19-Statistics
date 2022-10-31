@@ -1,5 +1,9 @@
 import { CovidStats } from "../clients";
-import { AggregatedCovidStat, DateRangeStat } from "./models";
+import {
+  AggregatedByCountryCovidStat,
+  AggregatedByDateCovidStat,
+  DateRangeStat,
+} from "./models";
 
 const getMinDate = (stats: CovidStats[]): Date => {
   const dates = stats.map((s) =>
@@ -32,61 +36,125 @@ export const getAggregatedStats = (
   dateFrom?: Date,
   dateTo?: Date,
   country?: string
-): AggregatedCovidStat[] => {
-  let countries: {
-    [country: string]: AggregatedCovidStat;
-  } = {};
+) => {
+  return {
+    byDate(): AggregatedByDateCovidStat[] {
+      var statsByDate: {
+        [dateRep: string]: AggregatedByDateCovidStat;
+      } = {};
 
-  for (const {
-    //object deconstruction
-    day,
-    month,
-    year,
-    cases,
-    deaths,
-    countriesAndTerritories,
-    popData2019, // add later
-  } of country
-    ? stats.filter((x) => x.countriesAndTerritories === country) // for getting only one specific country(if needed)
-    : stats) {
-    if (!countries[countriesAndTerritories]) {
-      countries[countriesAndTerritories] = {
-        cases: 0,
-        deaths: 0,
-        totalCases: 0,
-        totalDeaths: 0,
-      };
-    }
-    // for getting only one data from the specif date(if needed)
-    const statDate = new Date(Number(year), Number(month) - 1, Number(day));
-    if (dateFrom && dateTo) {
-      if (statDate >= dateFrom && statDate <= dateTo) {
-        countries[countriesAndTerritories].cases += cases;
-        countries[countriesAndTerritories].deaths += deaths;
+      for (const { day, month, year, dateRep, cases, deaths } of country
+        ? stats.filter((x) => x.countriesAndTerritories === country)
+        : stats) {
+        if (!statsByDate[dateRep]) {
+          statsByDate[dateRep] = {
+            cases: 0,
+            deaths: 0,
+            date: new Date(Number(year), Number(month) - 1, Number(day)),
+          };
+        }
+        const statDate = new Date(Number(year), Number(month) - 1, Number(day));
+        if (dateFrom && dateTo) {
+          if (statDate >= dateFrom && statDate <= dateTo) {
+            statsByDate[dateRep].cases += cases;
+            statsByDate[dateRep].deaths += deaths;
+          }
+        } else if (dateFrom) {
+          if (statDate >= dateFrom) {
+            statsByDate[dateRep].cases += cases;
+            statsByDate[dateRep].deaths += deaths;
+          }
+        } else if (dateTo) {
+          if (statDate <= dateTo) {
+            statsByDate[dateRep].cases += cases;
+            statsByDate[dateRep].deaths += deaths;
+          }
+        } else {
+          statsByDate[dateRep].cases += cases;
+          statsByDate[dateRep].deaths += deaths;
+        }
       }
-    } else if (dateFrom) {
-      if (statDate >= dateFrom) {
-        countries[countriesAndTerritories].cases += cases;
-        countries[countriesAndTerritories].deaths += deaths;
+      let aggregatedStats: AggregatedByDateCovidStat[] = [];
+      for (let key in statsByDate) {
+        aggregatedStats.push({
+          ...statsByDate[key],
+        });
       }
-    } else if (dateTo) {
-      if (statDate <= dateTo) {
-        countries[countriesAndTerritories].cases += cases;
-        countries[countriesAndTerritories].deaths += deaths;
-      }
-    } else {
-      countries[countriesAndTerritories].cases += cases;
-      countries[countriesAndTerritories].deaths += deaths;
-    }
-    countries[countriesAndTerritories].totalCases += cases;
-    countries[countriesAndTerritories].totalDeaths += deaths;
-  }
+      console.log(aggregatedStats);
+      return aggregatedStats.reverse();
+    },
 
-  let aggregatedStats: AggregatedCovidStat[] = [];
-  for (let key in countries) {
-    aggregatedStats.push({ ...countries[key], country: key });
-  }
-  return aggregatedStats;
+    byCountry(): AggregatedByCountryCovidStat[] {
+      let countries: {
+        [country: string]: AggregatedByCountryCovidStat;
+      } = {};
+
+      for (const {
+        day,
+        month,
+        year,
+        cases,
+        deaths,
+        countriesAndTerritories,
+        popData2019, // add later
+      } of country
+        ? stats.filter((x) => x.countriesAndTerritories === country) // for getting only one specific country(if needed)
+        : stats) {
+        if (!countries[countriesAndTerritories]) {
+          countries[countriesAndTerritories] = {
+            cases: 0,
+            deaths: 0,
+            totalCases: 0,
+            totalDeaths: 0,
+            popThousandCases: 0, //(cases / popData2019) * 1000,
+            popThousandDeaths: 0, //(deaths / popData2019) * 1000,
+            popData: popData2019,
+          };
+        }
+        // for getting only one data from the specif date(if needed)
+        const statDate = new Date(Number(year), Number(month) - 1, Number(day));
+        if (dateFrom && dateTo) {
+          if (statDate >= dateFrom && statDate <= dateTo) {
+            countries[countriesAndTerritories].cases += cases;
+            countries[countriesAndTerritories].deaths += deaths;
+          }
+        } else if (dateFrom) {
+          if (statDate >= dateFrom) {
+            countries[countriesAndTerritories].cases += cases;
+            countries[countriesAndTerritories].deaths += deaths;
+          }
+        } else if (dateTo) {
+          if (statDate <= dateTo) {
+            countries[countriesAndTerritories].cases += cases;
+            countries[countriesAndTerritories].deaths += deaths;
+          }
+        } else {
+          countries[countriesAndTerritories].cases += cases;
+          countries[countriesAndTerritories].deaths += deaths;
+        }
+        countries[countriesAndTerritories].totalCases += cases;
+        countries[countriesAndTerritories].totalDeaths += deaths;
+      }
+
+      let aggregatedStats: AggregatedByCountryCovidStat[] = [];
+      for (let key in countries) {
+        aggregatedStats.push({
+          ...countries[key],
+          country: key,
+          popThousandCases:
+            Math.round(
+              (countries[key].totalCases / countries[key].popData) * 1000 * 100
+            ) / 100,
+          popThousandDeaths:
+            Math.round(
+              (countries[key].totalDeaths / countries[key].popData) * 1000 * 100
+            ) / 100,
+        });
+      }
+
+      return aggregatedStats;
+    },
+  };
 };
 
 /*

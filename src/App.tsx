@@ -6,9 +6,10 @@ import CovidStatChart from "./components/CovideStatChart";
 import { CovidApiClient, CovidStats } from "./clients";
 import {
   getAggregatedStats,
-  AggregatedCovidStat,
+  AggregatedByCountryCovidStat,
   getMinMaxDate,
   getAllCountries,
+  AggregatedByDateCovidStat,
 } from "./services";
 import dayjs from "dayjs";
 
@@ -17,7 +18,7 @@ function App() {
 
   const [allData, setAllData] = useState<CovidStats[]>([]);
   const [tableActive, setTableActive] = useState<boolean>(true);
-  const [data, setData] = useState<AggregatedCovidStat[]>([]);
+  const [chartData, setChartData] = useState<AggregatedByDateCovidStat[]>([]);
 
   const [minDate, setMinDate] = useState<Date>(new Date());
   const [maxDate, setMaxDate] = useState<Date>(new Date());
@@ -57,24 +58,25 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const updateParams = () => {
-      const aggregatedStats = getAggregatedStats(
-        allData,
-        startDate,
-        endDate,
-        selectedCountry
-      );
-      setData(aggregatedStats);
-    };
-    updateParams();
-  }, [startDate, endDate, selectedCountry, allData]);
-
   const showData = (tableActive: boolean) => {
     if (tableActive) {
-      return <CovidStatList data={data} />;
+      return (
+        <CovidStatList
+          data={allData}
+          startDate={startDate}
+          endDate={endDate}
+          selectedCountry={selectedCountry}
+        />
+      );
     } else {
-      return <CovidStatChart />;
+      return (
+        <CovidStatChart
+          data={allData}
+          startDate={startDate}
+          endDate={endDate}
+          selectedCountry={selectedCountry}
+        />
+      );
     }
   };
 

@@ -1,21 +1,67 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CovidStats } from "../clients";
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts";
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import { AggregatedByDateCovidStat, getAggregatedStats } from "../services";
 
-const data = [
-  { name: "Day 1", uv: 400, pv: 200, amt: 200 },
-  { name: "Day 2", uv: 200, pv: 200, amt: 200 },
-  { name: "Day 3", uv: 150, pv: 200, amt: 200 },
-];
+interface CovidStatsChartProps {
+  data: CovidStats[];
+  startDate: Date;
+  endDate: Date;
+  selectedCountry: string;
+}
 
-const CovidStatChart = () => {
+const CovidStatChart: React.FC<CovidStatsChartProps> = ({
+  data,
+  startDate,
+  endDate,
+  selectedCountry,
+}) => {
+  const [chartData, setChartData] = useState<AggregatedByDateCovidStat[]>([]);
+
+  useEffect(() => {
+    const aggregatedStats = getAggregatedStats(
+      data,
+      startDate,
+      endDate,
+      selectedCountry
+    );
+    setChartData(aggregatedStats.byDate());
+    console.log(aggregatedStats.byDate());
+  }, [startDate, endDate, selectedCountry, data]);
+
   return (
-    <div>
-      <LineChart width={800} height={400} data={data} className="m-auto">
-        <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-        <CartesianGrid stroke="#ccc" />
-        <XAxis dataKey="name" />
-        <YAxis />
+    <div className="py-6 m-auto ">
+      <LineChart
+        data={chartData}
+        width={window.innerWidth / 1.5}
+        height={window.innerHeight / 1.5}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <Legend />
+        <YAxis dataKey="cases" />
+        s
+        <Line
+          type="monotone"
+          dataKey="cases"
+          stroke="orange"
+          dot={false}
+          name="Случаи"
+        />
+        <Line
+          type="monotone"
+          dataKey="deaths"
+          stroke="red"
+          dot={false}
+          name="Смерти"
+        />
       </LineChart>
     </div>
   );

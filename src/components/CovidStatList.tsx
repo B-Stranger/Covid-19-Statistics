@@ -1,12 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CovidStats } from "../clients";
-import { AggregatedCovidStat } from "../services/models";
+import { getAggregatedStats } from "../services";
+import { AggregatedByCountryCovidStat } from "../services/models";
 
-interface CovidStatsProps {
-  data: AggregatedCovidStat[];
+interface CovidStatsListProps {
+  data: CovidStats[];
+  startDate: Date;
+  endDate: Date;
+  selectedCountry: string;
 }
 
-const CovidStatList: React.FC<CovidStatsProps> = ({ data }) => {
+const CovidStatList: React.FC<CovidStatsListProps> = ({
+  data,
+  startDate,
+  endDate,
+  selectedCountry,
+}) => {
+  const [listData, setListData] = useState<AggregatedByCountryCovidStat[]>([]);
+
+  useEffect(() => {
+    const aggregatedStats = getAggregatedStats(
+      data,
+      startDate,
+      endDate,
+      selectedCountry
+    );
+    setListData(aggregatedStats.byCountry);
+  }, [startDate, endDate, selectedCountry, data]);
+
   return (
     <div>
       <div className="-mx-4 mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
@@ -37,7 +58,7 @@ const CovidStatList: React.FC<CovidStatsProps> = ({ data }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white m-2">
-            {data.map((stat, index) => (
+            {listData.map((stat, index) => (
               <tr key={index} className=" m-2">
                 <td className="pl-4 pr-3 font-medium text-gray-900 sm:pl-6">
                   <>{stat.country}</>
@@ -55,10 +76,10 @@ const CovidStatList: React.FC<CovidStatsProps> = ({ data }) => {
                   <>{stat.totalDeaths}</>
                 </td>
                 <td className="hidden text-gray-500 sm:table-cell">
-                  <>Temp</>
+                  <>{stat.popThousandCases}</>
                 </td>
                 <td className="hidden text-gray-500 sm:table-cell">
-                  <>Temp</>
+                  <>{stat.popThousandDeaths}</>
                 </td>
               </tr>
             ))}
