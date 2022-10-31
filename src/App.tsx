@@ -110,19 +110,19 @@ function App() {
           <h3>Считать данные с</h3>
           <input
             type="date"
-            min={dayjs(minDate).format("YYYY-MM-DD")}
-            max={dayjs(maxDate).format("YYYY-MM-DD")}
-            value={dayjs(minDate).format("YYYY-MM-DD")}
-            onChange={handelStartDateChange}
             className="mx-1 rounded-md"
+            min={dayjs(minDate).format("YYYY-MM-DD")}
+            max={dayjs(endDate).format("YYYY-MM-DD")}
+            value={dayjs(startDate).format("YYYY-MM-DD")}
+            onChange={handelStartDateChange}
           />
           <h3>по</h3>
           <input
             type="date"
             className="mx-1 rounded-md"
-            min={dayjs(minDate).format("YYYY-MM-DD")}
+            min={dayjs(startDate).format("YYYY-MM-DD")}
             max={dayjs(maxDate).format("YYYY-MM-DD")}
-            value={dayjs(maxDate).format("YYYY-MM-DD")}
+            value={dayjs(endDate).format("YYYY-MM-DD")}
             onChange={handleEndDateChange}
           />
           <button
