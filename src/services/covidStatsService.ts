@@ -31,14 +31,13 @@ export const getAllCountries = (stats: CovidStats[]): string[] => {
   return Array.from(new Set(stats.map((stat) => stat.countriesAndTerritories)));
 };
 
-export const getAggregatedStats = (
-  stats: CovidStats[],
-  dateFrom?: Date,
-  dateTo?: Date,
-  country?: string
-) => {
+export const getAggregatedStats = (stats: CovidStats[]) => {
   return {
-    byDate(): AggregatedByDateCovidStat[] {
+    byDate(
+      dateFrom?: Date,
+      dateTo?: Date,
+      country?: string
+    ): AggregatedByDateCovidStat[] {
       var statsByDate: {
         [dateRep: string]: AggregatedByDateCovidStat;
       } = {};
@@ -53,23 +52,24 @@ export const getAggregatedStats = (
             date: new Date(Number(year), Number(month) - 1, Number(day)),
           };
         }
+        let aggregateBool = false;
         const statDate = new Date(Number(year), Number(month) - 1, Number(day));
         if (dateFrom && dateTo) {
           if (statDate >= dateFrom && statDate <= dateTo) {
-            statsByDate[dateRep].cases += cases;
-            statsByDate[dateRep].deaths += deaths;
+            aggregateBool = true;
           }
         } else if (dateFrom) {
           if (statDate >= dateFrom) {
-            statsByDate[dateRep].cases += cases;
-            statsByDate[dateRep].deaths += deaths;
+            aggregateBool = true;
           }
         } else if (dateTo) {
           if (statDate <= dateTo) {
-            statsByDate[dateRep].cases += cases;
-            statsByDate[dateRep].deaths += deaths;
+            aggregateBool = true;
           }
         } else {
+          aggregateBool = true;
+        }
+        if (aggregateBool) {
           statsByDate[dateRep].cases += cases;
           statsByDate[dateRep].deaths += deaths;
         }
@@ -84,7 +84,11 @@ export const getAggregatedStats = (
       return aggregatedStats.reverse();
     },
 
-    byCountry(): AggregatedByCountryCovidStat[] {
+    byCountry(
+      dateFrom?: Date,
+      dateTo?: Date,
+      country?: string
+    ): AggregatedByCountryCovidStat[] {
       let countries: {
         [country: string]: AggregatedByCountryCovidStat;
       } = {};
@@ -113,25 +117,28 @@ export const getAggregatedStats = (
         }
         // for getting only one data from the specif date(if needed)
         const statDate = new Date(Number(year), Number(month) - 1, Number(day));
+        let aggregateBool = false;
+
         if (dateFrom && dateTo) {
           if (statDate >= dateFrom && statDate <= dateTo) {
-            countries[countriesAndTerritories].cases += cases;
-            countries[countriesAndTerritories].deaths += deaths;
+            aggregateBool = true;
           }
         } else if (dateFrom) {
           if (statDate >= dateFrom) {
-            countries[countriesAndTerritories].cases += cases;
-            countries[countriesAndTerritories].deaths += deaths;
+            aggregateBool = true;
           }
         } else if (dateTo) {
           if (statDate <= dateTo) {
-            countries[countriesAndTerritories].cases += cases;
-            countries[countriesAndTerritories].deaths += deaths;
+            aggregateBool = true;
           }
         } else {
+          aggregateBool = true;
+        }
+        if (aggregateBool) {
           countries[countriesAndTerritories].cases += cases;
           countries[countriesAndTerritories].deaths += deaths;
         }
+
         countries[countriesAndTerritories].totalCases += cases;
         countries[countriesAndTerritories].totalDeaths += deaths;
       }

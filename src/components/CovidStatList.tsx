@@ -19,13 +19,8 @@ const CovidStatList: React.FC<CovidStatsListProps> = ({
   const [listData, setListData] = useState<AggregatedByCountryCovidStat[]>([]);
 
   useEffect(() => {
-    const aggregatedStats = getAggregatedStats(
-      data,
-      startDate,
-      endDate,
-      selectedCountry
-    );
-    setListData(aggregatedStats.byCountry);
+    const aggregatedStats = getAggregatedStats(data);
+    setListData(aggregatedStats.byCountry(startDate, endDate, selectedCountry));
   }, [startDate, endDate, selectedCountry, data]);
 
   return (

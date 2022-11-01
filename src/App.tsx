@@ -4,13 +4,7 @@ import classNames from "classnames";
 import CovidStatList from "./components/CovidStatList";
 import CovidStatChart from "./components/CovideStatChart";
 import { CovidApiClient, CovidStats } from "./clients";
-import {
-  getAggregatedStats,
-  AggregatedByCountryCovidStat,
-  getMinMaxDate,
-  getAllCountries,
-  AggregatedByDateCovidStat,
-} from "./services";
+import { getMinMaxDate, getAllCountries } from "./services";
 import dayjs from "dayjs";
 
 function App() {
@@ -18,7 +12,6 @@ function App() {
 
   const [allData, setAllData] = useState<CovidStats[]>([]);
   const [tableActive, setTableActive] = useState<boolean>(true);
-  const [chartData, setChartData] = useState<AggregatedByDateCovidStat[]>([]);
 
   const [minDate, setMinDate] = useState<Date>(new Date());
   const [maxDate, setMaxDate] = useState<Date>(new Date());

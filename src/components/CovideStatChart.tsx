@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CovidStats } from "../clients";
-import {
-  LineChart,
-  Line,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { LineChart, Line, CartesianGrid, YAxis, Legend } from "recharts";
 import { AggregatedByDateCovidStat, getAggregatedStats } from "../services";
 
 interface CovidStatsChartProps {
@@ -27,14 +19,8 @@ const CovidStatChart: React.FC<CovidStatsChartProps> = ({
   const [chartData, setChartData] = useState<AggregatedByDateCovidStat[]>([]);
 
   useEffect(() => {
-    const aggregatedStats = getAggregatedStats(
-      data,
-      startDate,
-      endDate,
-      selectedCountry
-    );
-    setChartData(aggregatedStats.byDate());
-    console.log(aggregatedStats.byDate());
+    const aggregatedStats = getAggregatedStats(data);
+    setChartData(aggregatedStats.byDate(startDate, endDate, selectedCountry));
   }, [startDate, endDate, selectedCountry, data]);
 
   return (
@@ -47,7 +33,6 @@ const CovidStatChart: React.FC<CovidStatsChartProps> = ({
         <CartesianGrid strokeDasharray="3 3" />
         <Legend />
         <YAxis dataKey="cases" />
-        s
         <Line
           type="monotone"
           dataKey="cases"
