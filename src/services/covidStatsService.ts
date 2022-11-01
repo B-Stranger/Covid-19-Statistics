@@ -76,11 +76,8 @@ export const getAggregatedStats = (stats: CovidStats[]) => {
       }
       let aggregatedStats: AggregatedByDateCovidStat[] = [];
       for (let key in statsByDate) {
-        aggregatedStats.push({
-          ...statsByDate[key],
-        });
+        aggregatedStats.push(statsByDate[key]);
       }
-      console.log(aggregatedStats);
       return aggregatedStats.sort((a, b) => (a.date > b.date ? 1 : -1));
     },
 
