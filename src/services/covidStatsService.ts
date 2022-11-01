@@ -81,7 +81,7 @@ export const getAggregatedStats = (stats: CovidStats[]) => {
         });
       }
       console.log(aggregatedStats);
-      return aggregatedStats.reverse();
+      return aggregatedStats.sort((a, b) => (a.date > b.date ? 1 : -1));
     },
 
     byCountry(
@@ -159,7 +159,9 @@ export const getAggregatedStats = (stats: CovidStats[]) => {
         });
       }
 
-      return aggregatedStats;
+      return aggregatedStats.sort((a, b) =>
+        a.country.toUpperCase() > b.country.toUpperCase() ? 1 : -1
+      );
     },
   };
 };

@@ -20,11 +20,17 @@ function App() {
 
   const [countries, setCountries] = useState<string[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [statsToShow, setStatsToSow] = useState<number>(20);
 
   const handelStartDateChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setStartDate(new Date(event.target.value));
+  };
+  const handleStatsToShowChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setStatsToSow(Number(event.target.value));
   };
   const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEndDate(new Date(event.target.value));
@@ -32,10 +38,12 @@ function App() {
   const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCountry(event.target.value);
   };
+
   const handleFilterReset = () => {
     setStartDate(minDate);
     setEndDate(maxDate);
     setSelectedCountry("");
+    setStatsToSow(20);
   };
   useEffect(() => {
     const fetchData = async () => {
@@ -59,6 +67,7 @@ function App() {
           startDate={startDate}
           endDate={endDate}
           selectedCountry={selectedCountry}
+          statsToShow={statsToShow}
         />
       );
     } else {
