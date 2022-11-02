@@ -1,11 +1,11 @@
-import "./App.css";
-import React, { useEffect, useState } from "react";
-import classNames from "classnames";
-import CovidStatList from "./components/CovidStatList";
-import CovidStatChart from "./components/CovideStatChart";
-import { CovidApiClient, CovidStats } from "./clients";
-import { getMinMaxDate, getAllCountries } from "./services";
-import dayjs from "dayjs";
+import './App.css';
+import React, { useEffect, useState } from 'react';
+import classNames from 'classnames';
+import CovidStatList from './components/CovidStatList';
+import CovidStatChart from './components/CovideStatChart';
+import { CovidApiClient, CovidStats } from './clients';
+import { getMinMaxDate, getAllCountries } from './services';
+import dayjs from 'dayjs';
 
 function App() {
   const client = new CovidApiClient();
@@ -19,7 +19,7 @@ function App() {
   const [endDate, setEndDate] = useState<Date>(new Date());
 
   const [countries, setCountries] = useState<string[]>([]);
-  const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [selectedCountry, setSelectedCountry] = useState<string>('');
   const [statsToShow, setStatsToSow] = useState<number>(20);
 
   const handelStartDateChange = (
@@ -37,7 +37,7 @@ function App() {
   const handleFilterReset = () => {
     setStartDate(minDate);
     setEndDate(maxDate);
-    setSelectedCountry("");
+    setSelectedCountry('');
     setStatsToSow(20);
   };
   useEffect(() => {
@@ -91,7 +91,7 @@ function App() {
         <div className="self-start ">
           <button
             onClick={() => setTableActive(!tableActive)}
-            className={classNames("inline-flex btn-primary", {
+            className={classNames('inline-flex btn-primary', {
               active: tableActive,
             })}
           >
@@ -99,7 +99,7 @@ function App() {
           </button>
           <button
             onClick={() => setTableActive(!tableActive)}
-            className={classNames("inline-flex btn-primary", {
+            className={classNames('inline-flex btn-primary', {
               active: !tableActive,
             })}
           >
@@ -112,18 +112,18 @@ function App() {
           <input
             type="date"
             className="mx-1 rounded-md"
-            min={dayjs(minDate).format("YYYY-MM-DD")}
-            max={dayjs(endDate).format("YYYY-MM-DD")}
-            value={dayjs(startDate).format("YYYY-MM-DD")}
+            min={dayjs(minDate).format('YYYY-MM-DD')}
+            max={dayjs(endDate).format('YYYY-MM-DD')}
+            value={dayjs(startDate).format('YYYY-MM-DD')}
             onChange={handelStartDateChange}
           />
           <h3>по</h3>
           <input
             type="date"
             className="mx-1 rounded-md"
-            min={dayjs(startDate).format("YYYY-MM-DD")}
-            max={dayjs(maxDate).format("YYYY-MM-DD")}
-            value={dayjs(endDate).format("YYYY-MM-DD")}
+            min={dayjs(startDate).format('YYYY-MM-DD')}
+            max={dayjs(maxDate).format('YYYY-MM-DD')}
+            value={dayjs(endDate).format('YYYY-MM-DD')}
             onChange={handleEndDateChange}
           />
           <button
@@ -145,7 +145,7 @@ function App() {
               onChange={handleCountryChange}
             >
               <>
-                <option value={""}>Искать по всем странам</option>
+                <option value={''}>Искать по всем странам</option>
                 {countries.map((x, index) => (
                   <option key={index}>{x}</option>
                 ))}
