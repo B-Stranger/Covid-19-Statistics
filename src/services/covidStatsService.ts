@@ -1,9 +1,9 @@
-import { CovidStats } from "../clients";
+import { CovidStats } from '../clients';
 import {
   AggregatedByCountryCovidStat,
   AggregatedByDateCovidStat,
   DateRangeStat,
-} from "./models";
+} from './models';
 
 const getMinDate = (stats: CovidStats[]): Date => {
   const dates = stats.map((s) =>
@@ -97,7 +97,7 @@ export const getAggregatedStats = (stats: CovidStats[]) => {
         cases,
         deaths,
         countriesAndTerritories,
-        popData2019, // add later
+        popData2019,
       } of country
         ? stats.filter((x) => x.countriesAndTerritories === country) // for getting only one specific country(if needed)
         : stats) {
@@ -162,36 +162,3 @@ export const getAggregatedStats = (stats: CovidStats[]) => {
     },
   };
 };
-
-/*
-const getCountries = (data: CovidStats[]) => {
-  const uniqueCountries: any = [];
-  data.filter((stat) => {
-    const isDuplicate = uniqueCountries.includes(stat.countriesAndTerritories);
-    if (!isDuplicate) {
-      uniqueCountries.push(stat.countriesAndTerritories);
-      return true;
-    }
-    return false;
-  });
-  return uniqueCountries;
-};
-
-export const covidStatsService = (data: CovidStats[]) => {
-  let aggregatedByCountryStat: AggregatedCovidStat[] = [];
-  const countries: any[] = getCountries(data);
-  for (let i = 0; i < countries.length; i++) {
-    aggregatedByCountryStat.push({
-      countriesAndTerritories: countries[i],
-      cases: 0,
-      deaths: 0,
-    });
-    for (let j = 0; j < data.length; j++) {
-      if (data[j].countriesAndTerritories == countries[i]) {
-        aggregatedByCountryStat[i].deaths += data[j].deaths;
-        aggregatedByCountryStat[i].cases += data[j].cases;
-      }
-    }
-  }
-};
-*/

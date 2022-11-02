@@ -27,11 +27,6 @@ function App() {
   ) => {
     setStartDate(new Date(event.target.value));
   };
-  const handleStatsToShowChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setStatsToSow(Number(event.target.value));
-  };
   const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEndDate(new Date(event.target.value));
   };
@@ -48,10 +43,12 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await client.getCovidStats(); // all data
-      setMinDate(getMinMaxDate(data).minDate); //min date
-      setMaxDate(getMinMaxDate(data).maxDate); //max date
-      setStartDate(getMinMaxDate(data).minDate); //filter date from
-      setEndDate(getMinMaxDate(data).maxDate); //filter date to
+      const minData = getMinMaxDate(data).minDate;
+      const maxData = getMinMaxDate(data).maxDate;
+      setMinDate(minData); //min date
+      setMaxDate(maxData); //max date
+      setStartDate(minData); //filter date from
+      setEndDate(maxData); //filter date to
       setCountries(getAllCountries(data)); // all countries
       setAllData(data); //save data for aggregation
     };
